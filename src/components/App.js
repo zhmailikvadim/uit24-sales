@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Loader from './Loader';
-import Table from './TableSap';
+//import Table from './TableSap';
 //import FileReader from './FileReader';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import TableSap from './TableSap';
-var data
+import TableSearch from './TableSearch'
 class App extends Component {
   constructor() {
     super();
@@ -14,7 +14,8 @@ class App extends Component {
       data: [],      
       csvfile: undefined,
       data1:[],
-      fields:[]
+      fields:[],
+      search: ''
     };
     this.updateData = this.updateData.bind(this);
   }
@@ -40,28 +41,48 @@ class App extends Component {
   }
 
   updateData(result) {
-    console.log(result)
-          this.state.data1 = result.data
-          this.state.fields = result.meta.fields
+    this.setState(
+      {
+        data1:result.data,
+        fields:result.meta.fields
+      }
+    )
+
+  //        this.state.data1 = result.data
+  //        this.state.fields = result.meta.fields
  //         console.log(data);
         }
 
     
 //  log = log=>{console.log(this.data1)}
   onSort = sortField =>{
-    
     const cloneData = this.state.data1.concat();
-    const sortType = this.state.sort === 'asc' ? 'desc' : 'asc';
+    const sortType = this.state.sort === 'asc' ? '&#x21D2' : 'asc';
     const orderedData = _.orderBy(cloneData, sortField, sortType);
-
     this.setState({
       data1: orderedData,
       sort: sortType,
       sortField
     })
   }
+  searchHandler = search =>(
+    this.setState({search}),
+    console.log(search)
+  )
+  getFilteredData(){
+    const {data1, search} = this.state
+    console.log(search)
+    if (!search) {
+      return data1
+    }
 
+    return data1.filter(item => {
+      return item['VBELN'].toLowerCase().includes(search.toLowerCase())
+    })
+  }
   render() {
+    const filteredData = this.getFilteredData();
+
     console.log(this.state.data)
     console.log(this.state.data1)
     return (
@@ -69,14 +90,17 @@ class App extends Component {
       {
         this.state.isLoading 
         ? <Loader />
-        :<TableSap 
-          data={this.state.data}
-          data1={this.state.data1}
-          onSort={this.onSort}
-          sortField={this.state.sortField}
-          sort={this.state.sort}
-          fields={this.state.fields}
-        />
+        :<React.Fragment>
+          <TableSearch onSearch={this.searchHandler} />
+          <TableSap 
+            data={this.state.data}
+            data1={filteredData}
+            onSort={this.onSort}
+            sortField={this.state.sortField}
+            sort={this.state.sort}
+            fields={this.state.fields}
+          />
+        </React.Fragment>
       }
       </div>
     );

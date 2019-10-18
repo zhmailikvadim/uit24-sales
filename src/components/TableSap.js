@@ -1,13 +1,11 @@
 import React from 'react';
-import Table from './SortableBody';
-import SortableBody from './SortableBody';
 export default props => (
      <table className="table">
         <thead>
             <tr>
                 {props.fields.map(item =>(
                    <th onClick={props.onSort.bind(null, item)}>
-                        {item}{props.sortField === item ? <small>{props.sort}</small> : null}
+                        {item}{props.sortField === item ? <span>{props.sort}</span> : null}
                    </th> 
                 ))}
             </tr>
