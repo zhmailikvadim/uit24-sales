@@ -1,63 +1,62 @@
 import React, { Component } from 'react';
 import Loader from './Loader';
-//import Table from './TableSap';
-//import FileReader from './FileReader';
 import _ from 'lodash';
 import Papa from 'papaparse';
 import TableSap from './TableSap';
-import TableSearch from './TableSearch'
+import TableSearch from './TableSearch';
+import ReactPaginate from 'react-paginate'
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      isLoading: true,
-      data: [],      
+      isLoading: true,     
       csvfile: undefined,
       data1:[],
       fields:[],
-      search: ''
+      search: '',
+      currentPage: 0
     };
     this.updateData = this.updateData.bind(this);
   }
- //* state ={
- //   isLoading: true,
- //   data: [],
- //   this.updateData = this.updateData.bind(this)
-//  }
 
   async componentDidMount() {
-    Papa.parse("https://sales.uit24.com/maindata.csv", {
-      download: true,
-      header: true,
-      complete: this.updateData
-    })    
-    const response = await fetch(` http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
-    const data = await response.json()
-    this.setState({
-      isLoading: false,
-      data: _.orderBy(data, this.state.sortField, this.state.sort)
-     // data1 = data1
-    })
+      await new Promise( (resolve, reject) => {
+        Papa.parse("https://sales.uit24.com/maindata.csv", {
+          download: true,
+          header: true,
+          dynamicTyping: true,
+          complete:(results) => {
+            this.setState(
+              {
+                fields:results.meta.fields,
+                isLoading: false,
+                data1: _.orderBy(results.data, this.state.sortField, this.state.sort)
+              })            
+            
+            console.log(results)
+          }
+        }) 
+        resolve (true);
+      });
+  // Загрузка из json
+  // const response = await fetch(` http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
+  // const data = await response.json() 
   }
-
   updateData(result) {
+    console.log("update");
     this.setState(
       {
         data1:result.data,
         fields:result.meta.fields
       }
     )
+  }
 
-  //        this.state.data1 = result.data
-  //        this.state.fields = result.meta.fields
- //         console.log(data);
-        }
-
-    
 //  log = log=>{console.log(this.data1)}
   onSort = sortField =>{
     const cloneData = this.state.data1.concat();
-    const sortType = this.state.sort === 'asc' ? '&#x21D2' : 'asc';
+    const sortType = this.state.sort === 'asc' ? 'desc' : 'asc';
+    console.log(sortField);
     const orderedData = _.orderBy(cloneData, sortField, sortType);
     this.setState({
       data1: orderedData,
@@ -66,23 +65,33 @@ class App extends Component {
     })
   }
   searchHandler = search =>(
-    this.setState({search}),
-    console.log(search)
+    this.setState({search, currentPage: 0})
   )
   getFilteredData(){
     const {data1, search} = this.state
-    console.log(search)
     if (!search) {
       return data1
     }
-
-    return data1.filter(item => {
-      return item['VBELN'].toLowerCase().includes(search.toLowerCase())
-    })
+   var result = data1.filter(item => {
+     return (
+       item["VBELN"].toLowerCase().includes(search.toLowerCase())
+       //item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
+       //item["email"].toLowerCase().includes(search.toLowerCase())
+     );
+   });
+   if(!result.length){
+     result = this.state.data
+   }
+    return result
   }
+  pageChangeHandler = ({selected}) => (
+    this.setState({currentPage: selected})
+  )
   render() {
+    const pageSize = 5;
     const filteredData = this.getFilteredData();
-
+    const pageCount = Math.ceil(filteredData.length / pageSize)
+    const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage]
     console.log(this.state.data)
     console.log(this.state.data1)
     return (
@@ -93,14 +102,35 @@ class App extends Component {
         :<React.Fragment>
           <TableSearch onSearch={this.searchHandler} />
           <TableSap 
-            data={this.state.data}
-            data1={filteredData}
+            data1={displayData}
             onSort={this.onSort}
             sortField={this.state.sortField}
             sort={this.state.sort}
             fields={this.state.fields}
           />
         </React.Fragment>
+      }
+      {
+        this.state.data1.length > pageSize
+        ? <ReactPaginate
+        previousLabel={'<'}
+        nextLabel={'>'}
+        breakLabel={'...'}
+        breakClassName={'break-me'}
+        pageCount={pageCount}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={this.pageChangeHandler}
+        containerClassName={'pagination'}
+        activeClassName={'active'}
+        pageClassName="page-item"
+        pageLinkClassName="page-link"
+        previousClassName="page-item"
+        nextClassName="page-item"
+        previousLinkClassName="page-link"
+        nextLinkClassName="page-link"
+        forcePage={this.state.currentPage}
+      /> : null
       }
       </div>
     );
