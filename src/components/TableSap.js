@@ -16,7 +16,7 @@ export default props => (
             {props.data1.map((element, i) =>
                 <tr key = {i}>
                     {Object.entries(element).map(([k,v]) =>
-                    (<td bgcolor={element.VBELN === 70206 ? "green" : "white"}>{v}</td>))}
+                    (<td bgcolor={element.VBELN === 70206 ? props.color3 : props.color7}>{v}</td>))}
                 </tr>
             )}            
         </tbody>

@@ -4,7 +4,10 @@ import _ from 'lodash';
 import Papa from 'papaparse';
 import TableSap from './TableSap';
 import TableSearch from './TableSearch';
-import ReactPaginate from 'react-paginate'
+import ReactPaginate from 'react-paginate';
+var color3 = "white";
+var color7 = "green";
+var color0 = "red";
 class App extends Component {
   constructor() {
     super();
@@ -107,6 +110,9 @@ class App extends Component {
             sortField={this.state.sortField}
             sort={this.state.sort}
             fields={this.state.fields}
+            color0={color0}
+            color3={color3}
+            color7={color7}
           />
         </React.Fragment>
       }
