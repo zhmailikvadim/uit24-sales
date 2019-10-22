@@ -1,5 +1,6 @@
 import React from 'react';
 import './TableSap.css'
+import SortImage from './SortImage';
 export default props => (
      <table className="table">
      <caption>Аналитика продаж</caption>
@@ -7,7 +8,7 @@ export default props => (
             <tr>
                 {props.fields.map(item =>(
                    <th onClick={props.onSort.bind(null, item)}>
-                        {item}{props.sortField === item ? <span>{props.sort}</span> : null}
+                        {item}{props.sortField === item ? <SortImage sort = {props.sort} /> : null}
                    </th> 
                 ))}
             </tr>
