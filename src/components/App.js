@@ -81,20 +81,21 @@ class App extends Component {
       return data1
     }
    var result = data1.filter(item =>(fields.some(prop=>(item[prop]!=null && 
-    (s.call(item[prop])===s.call(123)) 
+    (s.call(item[prop])===s.call(123) 
     ?item[prop].toString().toLowerCase().includes(search.toLowerCase())
-    :item[prop].includes(search.toLowerCase())))));
-    console.log(result);
+    :item[prop].toLowerCase().includes(search.toLowerCase()))))));
+    //console.log(result);
     //  item["VBELN"].toLowerCase().includes(search.toString().toLowerCase())
 
              //item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
        //item["email"].toLowerCase().includes(search.toLowerCase())
      
   
-   if(!result.length){
-     result = this.state.data
+   if(result.length===0){
+     alert("Совпадений не найдено, пожалуйста, повторите ввод")
+     result = this.state.data1
    }
-    return result
+   return result
   }
   pageChangeHandler = ({selected}) => (
     this.setState({currentPage: selected})
