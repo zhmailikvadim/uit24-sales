@@ -5,9 +5,11 @@ import Papa from 'papaparse';
 import TableSap from './TableSap';
 import TableSearch from './TableSearch';
 import ReactPaginate from 'react-paginate';
+import PropTypes from 'prop-types';
 var color3 = "white";
 var color7 = "green";
 var color0 = "red";
+let s = Object.prototype.toString;
 class App extends Component {
   constructor() {
     super();
@@ -71,17 +73,24 @@ class App extends Component {
     this.setState({search, currentPage: 0})
   )
   getFilteredData(){
-    const {data1, search} = this.state
+
+    const {data1, search,fields} = this.state
+    console.log(data1);
+    console.log(search.toLowerCase());
     if (!search) {
       return data1
     }
-   var result = data1.filter(item => {
-     return (
-       item["VBELN"].toLowerCase().includes(search.toLowerCase())
-       //item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
+   var result = data1.filter(item =>(fields.some(prop=>(item[prop]!=null && 
+    (s.call(item[prop])===s.call(123)) 
+    ?item[prop].toString().toLowerCase().includes(search.toLowerCase())
+    :item[prop].includes(search.toLowerCase())))));
+    console.log(result);
+    //  item["VBELN"].toLowerCase().includes(search.toString().toLowerCase())
+
+             //item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
        //item["email"].toLowerCase().includes(search.toLowerCase())
-     );
-   });
+     
+  
    if(!result.length){
      result = this.state.data
    }
