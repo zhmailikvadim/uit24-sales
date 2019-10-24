@@ -3,7 +3,7 @@ table {
     font-size: 14px;
     background: white;
     max-width: 100%;
-    width: inherit;
+    width: 100%;
     border-collapse: collapse;
     text-align: left;
   }

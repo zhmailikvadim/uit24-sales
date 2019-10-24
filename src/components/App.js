@@ -5,10 +5,6 @@ import Papa from 'papaparse';
 import TableSap from './TableSap';
 import TableSearch from './TableSearch';
 import ReactPaginate from 'react-paginate';
-import PropTypes from 'prop-types';
-var color3 = "white";
-var color7 = "green";
-var color0 = "red";
 let s = Object.prototype.toString;
 class App extends Component {
   constructor() {
@@ -77,7 +73,7 @@ class App extends Component {
     const {data1, search,fields} = this.state
     console.log(data1);
     console.log(search.toLowerCase());
-    if (!search) {
+    if (search.lenght===0) {
       return data1
     }
    var result = data1.filter(item =>(fields.some(prop=>(item[prop]!=null && 
@@ -100,8 +96,11 @@ class App extends Component {
   pageChangeHandler = ({selected}) => (
     this.setState({currentPage: selected})
   )
+  onRowSelect = row => (
+    console.log(row)
+  )
   render() {
-    const pageSize = 5;
+    const pageSize = 10;
     const filteredData = this.getFilteredData();
     const pageCount = Math.ceil(filteredData.length / pageSize)
     const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage]
@@ -120,9 +119,7 @@ class App extends Component {
             sortField={this.state.sortField}
             sort={this.state.sort}
             fields={this.state.fields}
-            color0={color0}
-            color3={color3}
-            color7={color7}
+            onRowSelect={this.onRowSelect}
           />
         </React.Fragment>
       }
