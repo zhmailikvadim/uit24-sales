@@ -11,8 +11,10 @@ class App extends Component {
     super();
     this.state = {
       isLoading: true,     
+      isLoading_fcat: true, 
       csvfile: undefined,
       data1:[],
+      fcat:[],
       fields:[],
       search: '',
       currentPage: 0
@@ -21,24 +23,41 @@ class App extends Component {
   }
 
   async componentDidMount() {
-      await new Promise( (resolve, reject) => {
-        Papa.parse("https://sales.uit24.com/zva501.csv", {
-          download: true,
-          header: true,
-          dynamicTyping: true,
-          complete:(results) => {
-            this.setState(
-              {
-                fields:results.meta.fields,
-                isLoading: false,
-                data1: _.orderBy(results.data, this.state.sortField, this.state.sort)
-              })            
-            
-            console.log(results)
-          }
-        }) 
-        resolve (true);
-      });
+    await new Promise( (resolve, reject) => {
+      Papa.parse("https://sales.uit24.com/zva501_fieldcat.csv", {
+        download: true,
+        header: true,
+        dynamicTyping: true,
+        complete:(results) => {
+          this.setState(
+            {
+              isLoading_fcat: false,
+              fcat: results.data
+            })            
+          
+          console.log(results)
+        }
+      }) 
+      resolve (true);
+    });
+    await new Promise( (resolve, reject) => {
+      Papa.parse("https://sales.uit24.com/zva501.csv", {
+        download: true,
+        header: true,
+        dynamicTyping: true,
+        complete:(results) => {
+          this.setState(
+            {
+              fields:results.meta.fields,
+              isLoading: false,
+              data1: _.orderBy(results.data, this.state.sortField, this.state.sort)
+            })            
+          
+          console.log(results)
+        }
+      }) 
+      resolve (true);
+    });
   // Загрузка из json
   // const response = await fetch(` http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`)
   // const data = await response.json() 
@@ -70,23 +89,21 @@ class App extends Component {
   )
   getFilteredData(){
 
-    const {data1, search,fields} = this.state
-    console.log(data1);
-    console.log(search.toLowerCase());
-    if (search.lenght===0) {
+    const {data1,search,fields} = this.state
+    var sl = search.length;
+    console.log(sl);
+    if ((sl === 0) || (search.lenght===null)){
+      console.log(search.length);
       return data1
     }
-   var result = data1.filter(item =>(fields.some(prop=>(item[prop]!=null && 
+    console.log(search.length);
+    var result = data1.filter(item =>(fields.some(prop=>(item[prop]!=null && 
     (s.call(item[prop])===s.call(123) 
     ?item[prop].toString().toLowerCase().includes(search.toLowerCase())
     :item[prop].toLowerCase().includes(search.toLowerCase()))))));
     //console.log(result);
     //  item["VBELN"].toLowerCase().includes(search.toString().toLowerCase())
 
-             //item["lastName"].toLowerCase().includes(search.toLowerCase()) ||
-       //item["email"].toLowerCase().includes(search.toLowerCase())
-     
-  
    if(result.length===0){
      alert("Совпадений не найдено, пожалуйста, повторите ввод")
      result = this.state.data1
@@ -104,23 +121,23 @@ class App extends Component {
     const filteredData = this.getFilteredData();
     const pageCount = Math.ceil(filteredData.length / pageSize)
     const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage]
-    console.log(this.state.data)
-    console.log(this.state.data1)
+     console.log(this.state.data1)
     return (
       <div className="container">
       {
         this.state.isLoading 
         ? <Loader />
         :<React.Fragment>
-          <TableSearch onSearch={this.searchHandler} />
           <TableSap 
             data1={displayData}
             onSort={this.onSort}
             sortField={this.state.sortField}
             sort={this.state.sort}
             fields={this.state.fields}
+            fcat={this.state.fcat}
             onRowSelect={this.onRowSelect}
           />
+        <TableSearch onSearch={this.searchHandler} />
         </React.Fragment>
       }
       {

@@ -1,9 +1,9 @@
 import React from 'react';
 import './TableSap.css'
 import SortImage from './SortImage';
-var ColorOverTerm = "lightskyblue";
-var Color3To7 = "lightsalmon";
+var ColorOverTerm = "Salmon";
 var Color0To3 = "	lightyellow";
+var Color3To7 = "lightskyblue";
 export default props => (
      <table className="table">
      <caption>Аналитика продаж</caption>
@@ -11,7 +11,7 @@ export default props => (
             <tr>
                 {props.fields.map(item =>(
                    <th onClick={props.onSort.bind(null, item)}>
-                        {item}{props.sortField === item ? <SortImage sort = {props.sort} /> : null}
+                        {props.fcat.map((element, i) =>(element.FIELDNAME === item?element.COLTEXT:null))}{props.sortField === item ? <SortImage sort = {props.sort} /> : null}
                    </th> 
                 ))} 
             </tr>

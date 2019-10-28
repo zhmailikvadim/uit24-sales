@@ -6,12 +6,14 @@ table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   }
 th {
-    position: sticky;
-    bottom:0;
+  top:0;
+  position: sticky;
   font-weight: normal;
   color: #039;
+  background: LightCyan;
   border-bottom: 1px dashed #69c;
   padding: 12px 17px;
 }
