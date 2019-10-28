@@ -22,7 +22,7 @@ class App extends Component {
 
   async componentDidMount() {
       await new Promise( (resolve, reject) => {
-        Papa.parse("https://sales.uit24.com/maindata.csv", {
+        Papa.parse("https://sales.uit24.com/zva501.csv", {
           download: true,
           header: true,
           dynamicTyping: true,
