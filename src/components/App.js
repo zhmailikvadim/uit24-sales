@@ -5,6 +5,7 @@ import Papa from 'papaparse';
 import TableSap from './TableSap';
 import TableSearch from './TableSearch';
 import ReactPaginate from 'react-paginate';
+import Frame from 'react-frame-component';
 let s = Object.prototype.toString;
 class App extends Component {
   constructor() {
@@ -128,7 +129,7 @@ class App extends Component {
         this.state.isLoading 
         ? <Loader />
         :<React.Fragment>
-          <TableSap 
+          <Frame><TableSap 
             data1={displayData}
             onSort={this.onSort}
             sortField={this.state.sortField}
@@ -136,8 +137,9 @@ class App extends Component {
             fields={this.state.fields}
             fcat={this.state.fcat}
             onRowSelect={this.onRowSelect}
-          />
-        <TableSearch onSearch={this.searchHandler} />
+            /></Frame> 
+            <Frame><TableSearch onSearch={this.searchHandler} /></Frame>
+        
         </React.Fragment>
       }
       {
