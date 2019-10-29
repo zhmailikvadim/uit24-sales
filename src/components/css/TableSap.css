@@ -1,4 +1,6 @@
 table {
+    margin-left: 0%;
+    left:0;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     font-size: 14px;
     background: white;
@@ -9,6 +11,7 @@ table {
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
   }
 th {
+  margin-left:0;
   top:0;
   position: sticky;
   font-weight: normal;

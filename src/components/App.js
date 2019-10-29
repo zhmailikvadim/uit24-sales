@@ -5,7 +5,7 @@ import Papa from 'papaparse';
 import TableSap from './TableSap';
 import TableSearch from './TableSearch';
 import ReactPaginate from 'react-paginate';
-import Frame from 'react-frame-component';
+
 let s = Object.prototype.toString;
 class App extends Component {
   constructor() {
@@ -117,30 +117,33 @@ class App extends Component {
   onRowSelect = row => (
     console.log(row)
   )
+  // Create a map for all your layouts 
   render() {
     const pageSize = 10;
     const filteredData = this.getFilteredData();
     const pageCount = Math.ceil(filteredData.length / pageSize)
     const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage]
-     console.log(this.state.data1)
-    return (
+    const defaultTableBar = (
+      <header>
+             <TableSearch onSearch={this.searchHandler}/>
+      </header>
+    );
+    const tableSap = (
       <div className="container">
       {
         this.state.isLoading 
         ? <Loader />
-        :<React.Fragment>
-          <Frame><TableSap 
-            data1={displayData}
-            onSort={this.onSort}
-            sortField={this.state.sortField}
-            sort={this.state.sort}
-            fields={this.state.fields}
-            fcat={this.state.fcat}
-            onRowSelect={this.onRowSelect}
-            /></Frame> 
-            <Frame><TableSearch onSearch={this.searchHandler} /></Frame>
-        
-        </React.Fragment>
+        : <React.Fragment>
+            {defaultTableBar}
+            <TableSap 
+              data1={displayData}
+              onSort={this.onSort}
+              sortField={this.state.sortField}
+              sort={this.state.sort}
+              fields={this.state.fields}
+              fcat={this.state.fcat}
+              onRowSelect={this.onRowSelect}/>
+         </React.Fragment>
       }
       {
         this.state.data1.length > pageSize
@@ -164,6 +167,12 @@ class App extends Component {
         forcePage={this.state.currentPage}
       /> : null
       }
+      </div>
+    );
+     console.log(this.state.data1)
+    return (
+      <div>
+        {tableSap}
       </div>
     );
   }

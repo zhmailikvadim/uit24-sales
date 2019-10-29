@@ -9,8 +9,10 @@
     "papaparse": "^5.1.0",
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
+    "react-bootstrap": "^1.0.0-beta.14",
     "react-dom": "^16.10.2",
     "react-frame-component": "^4.1.1",
+    "react-page-layout": "^0.9.8",
     "react-paginate": "^6.3.0",
     "react-scripts": "3.2.0"
   },
