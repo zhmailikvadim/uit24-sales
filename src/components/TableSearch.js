@@ -24,7 +24,7 @@ export default props => {
                     value={value}
                 />
             </div>
-            <Button variant="outline-danger" size="sm"  onClick={() => props.onSearch(value)}>Опасные</Button>
+            <Button variant="outline-danger" size="sm"  onClick={() => props.onSearchLessZero()}>Опасные</Button>
           </ButtonToolbar>
 
     )

@@ -25,7 +25,7 @@ class App extends Component {
 
   async componentDidMount() {
     await new Promise( (resolve, reject) => {
-      Papa.parse("https://sales.uit24.com/zva501_fieldcat.csv", {
+      Papa.parse("https://bi.belsap.com/zva501_fieldcat.csv", {
         download: true,
         header: true,
         dynamicTyping: true,
@@ -42,7 +42,7 @@ class App extends Component {
       resolve (true);
     });
     await new Promise( (resolve, reject) => {
-      Papa.parse("https://sales.uit24.com/zva501.csv", {
+      Papa.parse("https://bi.belsap.com/zva501.csv", {
         download: true,
         header: true,
         dynamicTyping: true,
