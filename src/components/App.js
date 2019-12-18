@@ -25,7 +25,7 @@ class App extends Component {
 
   async componentDidMount() {
     await new Promise( (resolve, reject) => {
-      Papa.parse("https://bi.belsap.com/zva501_fieldcat.csv", {
+      Papa.parse("http://bi.belsap.com/zva501_fieldcat.csv", {
         download: true,
         header: true,
         dynamicTyping: true,
@@ -42,7 +42,7 @@ class App extends Component {
       resolve (true);
     });
     await new Promise( (resolve, reject) => {
-      Papa.parse("https://bi.belsap.com/zva501.csv", {
+      Papa.parse("http://bi.belsap.com/zva501.csv", {
         download: true,
         header: true,
         dynamicTyping: true,
@@ -119,7 +119,7 @@ class App extends Component {
   )
   // Create a map for all your layouts 
   render() {
-    const pageSize = 10;
+    const pageSize = 50;
     const filteredData = this.getFilteredData();
     const pageCount = Math.ceil(filteredData.length / pageSize)
     const displayData = _.chunk(filteredData, pageSize)[this.state.currentPage]

@@ -1,9 +1,6 @@
 import React from 'react';
 import './css/TableSap.css'
 import SortImage from './SortImage';
-var ColorOverTerm = "Salmon";
-var Color0To3 = "	lightyellow";
-var Color3To7 = "lightskyblue";
 export default props => (
      <table className="table table-striped table-bordered table-hover table-sm" al>
      <caption>Аналитика продаж</caption>
